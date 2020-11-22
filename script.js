@@ -92,25 +92,45 @@
     computerScoreElement.innerHTML = computerScore;
   };
 
+  const checkScores = (checkComputer) => {
+    if ((playerScore === 21 && computerScore !== 21) || computerScore > 21) {
+      var titleElement = document.getElementById('game-title');
+      titleElement.innerHTML = 'The player has won!';
+      isGameOver = true;
+    } else if (
+      playerScore > 21 ||
+      (checkComputer && computerScore > playerScore && computerScore <= 21)
+    ) {
+      var titleElement = document.getElementById('game-title');
+      titleElement.innerHTML = 'The dealer has won.';
+      isGameOver = true;
+    }
+    /*else i*/
+  };
+
+  document.getElementById('stop-button').addEventListener('click', () => {
+    if (!isGameOver) {
+      var drawCardInterval = null;
+      drawCardInterval = setInterval(() => {
+        let computerCard = drawACard();
+        AddComputerCard(computerCard);
+        checkScores(true);
+        if (isGameOver) {
+          clearInterval(drawCardInterval);
+        }
+      }, 500);
+    }
+  });
+
   document.getElementById('deck-cards').addEventListener('click', () => {
     if (!isGameOver) {
       //draw a card
       if (cardsPool.length >= 2) {
         let playerCard = drawACard();
         AddPlayerCard(playerCard);
-
+        checkScores(false);
         /*let computerCard = drawACard();
         AddComputerCard(computerCard);*/
-
-        if (playerScore === 21) {
-          var titleElement = document.getElementById('game-title');
-          titleElement.innerHTML = "You've won!";
-          isGameOver = true;
-        } else if (playerScore >= 22) {
-          var titleElement = document.getElementById('game-title');
-          titleElement.innerHTML = "You've lost";
-          isGameOver = true;
-        }
       }
     }
   });
