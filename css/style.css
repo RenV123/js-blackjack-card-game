@@ -80,6 +80,10 @@ h2 {
   padding-top: 35px;
 }
 
+.btn {
+  margin: 10px 180px;
+}
+
 body {
   /* background: radial-gradient(circle, transparent 60%, black 150%),
     var(--game-bg-color);*/

@@ -35,6 +35,40 @@
 
   const startNewGame = () => {
     cardsPool = [...cardDeck];
+    computerScore = 0;
+    playerScore = 0;
+    isGameOver = false;
+    computerPickedCards = [];
+    userPickedCards = [];
+    redrawGame();
+  };
+
+  const redrawGame = () => {
+    let playerCardImg = document.getElementById('player-drawn-card-image');
+    let computerCardImg = document.getElementById('computer-drawn-card-image');
+    let titleElement = document.getElementById('game-title');
+    let computerScoreElement = document.getElementById('computer-score');
+    let playerScoreElement = document.getElementById('player-score');
+
+    if (playerCardImg) {
+      playerCardImg.src = './Assets/Cards/cardBack_red4.png';
+
+      //Make it accessible always update the alt tag
+      playerCardImg.alt = 'card back';
+      playerCardImg.style.visibility = 'hidden';
+    }
+
+    if (computerCardImg) {
+      playerCardImg.src = './Assets/Cards/cardBack_red4.png';
+
+      //Make it accessible always update the alt tag
+      computerCardImg.alt = 'card back';
+      computerCardImg.style.visibility = 'hidden';
+    }
+
+    titleElement.innerHTML = 'Draw a card.';
+    computerScoreElement.innerHTML = computerScore;
+    playerScoreElement.innerHTML = playerScore;
   };
 
   const getRandomNr = (min, max) => {
@@ -99,7 +133,7 @@
       isGameOver = true;
     } else if (
       playerScore > 21 ||
-      (checkComputer && computerScore > playerScore && computerScore <= 21)
+      (checkComputer && computerScore >= playerScore && computerScore <= 21)
     ) {
       var titleElement = document.getElementById('game-title');
       titleElement.innerHTML = 'The dealer has won.';
@@ -129,9 +163,11 @@
         let playerCard = drawACard();
         AddPlayerCard(playerCard);
         checkScores(false);
-        /*let computerCard = drawACard();
-        AddComputerCard(computerCard);*/
       }
     }
+  });
+
+  document.getElementById('restart-button').addEventListener('click', () => {
+    startNewGame();
   });
 })();
