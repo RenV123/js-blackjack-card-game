@@ -1,0 +1,94 @@
+:root {
+  --game-bg-color: #427939;
+  --game-bg-shadow-color: #172a14;
+  --game-card-shadow-color: #0f1b0da8;
+  --text-color: #ffffff;
+  --game-card-hover-color: #ffffff3f;
+  --game-bg-border-color: #ffffff20;
+}
+
+.game-container-cards {
+  display: flex;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  color: var(--text-color);
+}
+
+.card-image {
+  width: 140px;
+  height: 190px;
+  box-shadow: 2px 2px 10px 1px var(--game-card-shadow-color);
+  border-radius: 5px;
+}
+
+.deck .card-body .card-image:hover {
+  box-shadow: 3px 3px 15px 1px var(--game-card-hover-color);
+}
+
+.game-border {
+  border-style: dashed;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: var(--game-bg-border-color);
+  min-height: 78vh;
+  margin: 30px;
+  margin-top: 0px;
+}
+
+.score-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5vh;
+  max-height: 12vh;
+}
+
+.score-container-inner {
+  display: flex;
+  border-style: dashed;
+  border-width: 2px;
+  border-radius: 10px;
+  border-color: var(--game-bg-border-color);
+  border-bottom: none;
+  margin-top: 0px;
+  color: var(--text-color);
+}
+
+.player-score-container,
+.computer-score-container,
+.vs-score-container {
+  padding: 10px 30px 10px 30px;
+  text-align: center;
+}
+
+.player-score,
+.computer-score {
+  font-size: 2rem;
+  margin-bottom: 0rem;
+}
+
+.vs-score-container {
+  padding-top: 35px;
+}
+
+body {
+  /* background: radial-gradient(circle, transparent 60%, black 150%),
+    var(--game-bg-color);*/
+  background-image: url('../Assets/background-green.jpg');
+  box-shadow: inset 0 0 100vw black;
+
+  /*Make body entire vertical height*/
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+}

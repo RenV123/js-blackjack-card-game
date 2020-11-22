@@ -1,7 +1,11 @@
 (() => {
-  var cardDeck = [];
-  var userPickedCards = []; //A list with all cards a user picked.
-  var cardsPool = []; //Our pool with all the cards
+  let cardDeck = [];
+  let userPickedCards = []; //A list with all cards a user picked.
+  let computerPickedCards = [];
+  let cardsPool = []; //Our pool with all the cards
+  let playerScore = 0;
+  let computerScore = 0;
+  let isGameOver = false;
 
   const buildCardDeck = () => {
     let suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
@@ -40,19 +44,74 @@
   buildCardDeck();
   startNewGame();
 
-  document.getElementById('draw-card').addEventListener('click', () => {
-    console.log(cardsPool);
-    //draw a card
-    if (cardsPool.length > 0) {
-      let randIndex = getRandomNr(0, cardsPool.length);
-      let randomCard = cardsPool[randIndex];
-      console.log(`${randomCard.name} of ${randomCard.suit}`);
+  const drawACard = () => {
+    let randIndex = getRandomNr(0, cardsPool.length);
+    let randomCard = cardsPool[randIndex];
+    console.log(`${randomCard.name} of ${randomCard.suit}`);
 
-      //removes elements from startindex, nr of elements to remove.
-      cardsPool.splice(randIndex, 1);
-      userPickedCards.push(randomCard);
+    //removes elements from startindex, nr of elements to remove.
+    cardsPool.splice(randIndex, 1);
 
-      document.getElementById('card-image').src = randomCard.url;
+    return randomCard;
+  };
+
+  const AddPlayerCard = (card) => {
+    userPickedCards.push(card);
+
+    let lastDrawnCardImg = document.getElementById('player-drawn-card-image');
+
+    if (lastDrawnCardImg) {
+      lastDrawnCardImg.src = card.url;
+
+      //Make it accessible always update the alt tag
+      lastDrawnCardImg.alt = `${card.name} of ${card.suit}`;
+      lastDrawnCardImg.style.visibility = 'visible';
+    }
+
+    playerScore += card.score;
+
+    let playerScoreElement = document.getElementById('player-score');
+    playerScoreElement.innerHTML = playerScore;
+  };
+
+  const AddComputerCard = (card) => {
+    computerPickedCards.push(card);
+    let lastDrawnCardImg = document.getElementById('computer-drawn-card-image');
+
+    if (lastDrawnCardImg) {
+      lastDrawnCardImg.src = card.url;
+
+      //Make it accessible always update the alt tag
+      lastDrawnCardImg.alt = `${card.name} of ${card.suit}`;
+      lastDrawnCardImg.style.visibility = 'visible';
+    }
+
+    computerScore += card.score;
+
+    let computerScoreElement = document.getElementById('computer-score');
+    computerScoreElement.innerHTML = computerScore;
+  };
+
+  document.getElementById('deck-cards').addEventListener('click', () => {
+    if (!isGameOver) {
+      //draw a card
+      if (cardsPool.length >= 2) {
+        let playerCard = drawACard();
+        AddPlayerCard(playerCard);
+
+        /*let computerCard = drawACard();
+        AddComputerCard(computerCard);*/
+
+        if (playerScore === 21) {
+          var titleElement = document.getElementById('game-title');
+          titleElement.innerHTML = "You've won!";
+          isGameOver = true;
+        } else if (playerScore >= 22) {
+          var titleElement = document.getElementById('game-title');
+          titleElement.innerHTML = "You've lost";
+          isGameOver = true;
+        }
+      }
     }
   });
 })();
