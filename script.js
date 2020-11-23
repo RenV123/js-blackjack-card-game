@@ -6,7 +6,7 @@
   let playerScore = 0;
   let computerScore = 0;
   let isGameOver = false;
-  const cardStackingOffset = 35;
+  const cardStackingOffset = 37;
 
   const buildCardDeck = () => {
     let suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
@@ -48,7 +48,9 @@
     let playerCardsContainer = document.getElementById(
       'player-cards-container'
     );
-    let computerCardImg = document.getElementById('computer-drawn-card-image');
+    let computerCardsContainer = document.getElementById(
+      'computer-cards-container'
+    );
     let titleElement = document.getElementById('game-title');
     let computerScoreElement = document.getElementById('computer-score');
     let playerScoreElement = document.getElementById('player-score');
@@ -57,13 +59,9 @@
       playerCardsContainer.removeChild(playerCardsContainer.lastChild);
     }
 
-    /*if (computerCardImg) {
-      playerCardImg.src = './Assets/Cards/cardBack_red4.png';
-
-      //Make it accessible always update the alt tag
-      computerCardImg.alt = 'card back';
-      computerCardImg.style.visibility = 'hidden';
-    }*/
+    while (computerCardsContainer.firstChild) {
+      computerCardsContainer.removeChild(computerCardsContainer.lastChild);
+    }
 
     titleElement.innerHTML = 'Draw a card.';
     computerScoreElement.innerHTML = computerScore;
