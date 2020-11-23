@@ -6,6 +6,7 @@
   let playerScore = 0;
   let computerScore = 0;
   let isGameOver = false;
+  const cardStackingOffset = 35;
 
   const buildCardDeck = () => {
     let suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
@@ -44,27 +45,25 @@
   };
 
   const redrawGame = () => {
-    let playerCardImg = document.getElementById('player-drawn-card-image');
+    let playerCardsContainer = document.getElementById(
+      'player-cards-container'
+    );
     let computerCardImg = document.getElementById('computer-drawn-card-image');
     let titleElement = document.getElementById('game-title');
     let computerScoreElement = document.getElementById('computer-score');
     let playerScoreElement = document.getElementById('player-score');
 
-    if (playerCardImg) {
-      playerCardImg.src = './Assets/Cards/cardBack_red4.png';
-
-      //Make it accessible always update the alt tag
-      playerCardImg.alt = 'card back';
-      playerCardImg.style.visibility = 'hidden';
+    while (playerCardsContainer.firstChild) {
+      playerCardsContainer.removeChild(playerCardsContainer.lastChild);
     }
 
-    if (computerCardImg) {
+    /*if (computerCardImg) {
       playerCardImg.src = './Assets/Cards/cardBack_red4.png';
 
       //Make it accessible always update the alt tag
       computerCardImg.alt = 'card back';
       computerCardImg.style.visibility = 'hidden';
-    }
+    }*/
 
     titleElement.innerHTML = 'Draw a card.';
     computerScoreElement.innerHTML = computerScore;
@@ -89,18 +88,47 @@
     return randomCard;
   };
 
-  const AddPlayerCard = (card) => {
+  const calculateCardPosition = (cardContainer, offset) => {
+    var bounds = {};
+
+    if (cardContainer) {
+      bounds = { ...cardContainer.getBoundingClientRect() };
+      /* Calculate card position*/
+      if (cardContainer.lastChild) {
+        bounds.top =
+          cardContainer.lastChild.getBoundingClientRect().top + offset;
+      }
+    }
+
+    return bounds;
+  };
+
+  const createCardElement = (card, bounds) => {
+    let cardImg = document.createElement('img');
+    cardImg.src = card.url;
+
+    //Make it accessible always update the alt tag
+    cardImg.alt = `${card.name} of ${card.suit}`;
+    cardImg.style.position = 'absolute';
+    cardImg.style.left = `${bounds.left}px`;
+    cardImg.style.top = `${bounds.top}px`;
+
+    return cardImg;
+  };
+
+  const addPlayerCard = (card) => {
     userPickedCards.push(card);
 
-    let lastDrawnCardImg = document.getElementById('player-drawn-card-image');
+    let playerCardsContainer = document.getElementById(
+      'player-cards-container'
+    );
+    let bounds = calculateCardPosition(
+      playerCardsContainer,
+      cardStackingOffset
+    );
 
-    if (lastDrawnCardImg) {
-      lastDrawnCardImg.src = card.url;
-
-      //Make it accessible always update the alt tag
-      lastDrawnCardImg.alt = `${card.name} of ${card.suit}`;
-      lastDrawnCardImg.style.visibility = 'visible';
-    }
+    let playerCardImg = createCardElement(card, bounds);
+    playerCardsContainer.appendChild(playerCardImg);
 
     playerScore += card.score;
 
@@ -108,17 +136,18 @@
     playerScoreElement.innerHTML = playerScore;
   };
 
-  const AddComputerCard = (card) => {
+  const addComputerCard = (card) => {
     computerPickedCards.push(card);
-    let lastDrawnCardImg = document.getElementById('computer-drawn-card-image');
 
-    if (lastDrawnCardImg) {
-      lastDrawnCardImg.src = card.url;
-
-      //Make it accessible always update the alt tag
-      lastDrawnCardImg.alt = `${card.name} of ${card.suit}`;
-      lastDrawnCardImg.style.visibility = 'visible';
-    }
+    let computerCardsContainer = document.getElementById(
+      'computer-cards-container'
+    );
+    let bounds = calculateCardPosition(
+      computerCardsContainer,
+      cardStackingOffset
+    );
+    let computerCardImg = createCardElement(card, bounds);
+    computerCardsContainer.appendChild(computerCardImg);
 
     computerScore += card.score;
 
@@ -147,7 +176,7 @@
       var drawCardInterval = null;
       drawCardInterval = setInterval(() => {
         let computerCard = drawACard();
-        AddComputerCard(computerCard);
+        addComputerCard(computerCard);
         checkScores(true);
         if (isGameOver) {
           clearInterval(drawCardInterval);
@@ -161,7 +190,7 @@
       //draw a card
       if (cardsPool.length >= 2) {
         let playerCard = drawACard();
-        AddPlayerCard(playerCard);
+        addPlayerCard(playerCard);
         checkScores(false);
       }
     }
