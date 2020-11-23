@@ -130,6 +130,9 @@
     let playerCardImg = createCardElement(card, bounds);
     playerCardsContainer.appendChild(playerCardImg);
 
+    let cardPlaceSound = new Audio('./Assets/Audio/cardPlace1.ogg');
+    cardPlaceSound.play();
+
     playerScore += card.score;
 
     let playerScoreElement = document.getElementById('player-score');
@@ -148,6 +151,9 @@
     );
     let computerCardImg = createCardElement(card, bounds);
     computerCardsContainer.appendChild(computerCardImg);
+
+    let cardPlaceSound = new Audio('./Assets/Audio/cardPlace1.ogg');
+    cardPlaceSound.play();
 
     computerScore += card.score;
 
