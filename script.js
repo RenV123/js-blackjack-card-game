@@ -8,8 +8,11 @@
   let playerScore = 0;
   let computerScore = 0;
   let isGameOver = false;
-  const cardStackingOffset = 37;
+  const cardStackingOffset = 37; //Offset of the cards in pixels
 
+  /**
+   * Builds an array of card objects with a suit, name, url and score parameter.
+   */
   const buildCardDeck = () => {
     let suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
 
@@ -36,6 +39,10 @@
     }
   };
 
+  /**
+   * Starts a new Game.
+   * Resets all the scoring variables.
+   */
   const startNewGame = () => {
     cardsPool = [...cardDeck];
     computerScore = 0;
@@ -46,6 +53,9 @@
     redrawGame();
   };
 
+  /**
+   * Redraw/reset the important HTML elements of the game.
+   */
   const redrawGame = () => {
     let playerCardsContainer = document.getElementById(
       'player-cards-container'
@@ -70,13 +80,19 @@
     playerScoreElement.innerHTML = playerScore;
   };
 
+  /**
+   * A function that generates a random number between a range.
+   * @param {number} min The minimum range of the random nr.
+   * @param {number} max The maximum range of the random nr.
+   */
   const getRandomNr = (min, max) => {
     return Math.floor(Math.random() * (max - min) + min);
   };
 
-  buildCardDeck();
-  startNewGame();
-
+  /**
+   * Draw a card from the cardsPool.
+   * @return {object} Returns a card object from the cardPool.
+   */
   const drawACard = () => {
     let randIndex = getRandomNr(0, cardsPool.length);
     let randomCard = cardsPool[randIndex];
@@ -87,6 +103,12 @@
     return randomCard;
   };
 
+  /**
+   * Calculates the position of the card on the screen.
+   * @param {object} cardContainer
+   * @param {number} offset
+   * @return {object} A bounds object that contains an top and left object.
+   */
   const calculateCardPosition = (cardContainer, offset) => {
     var bounds = {};
 
@@ -102,6 +124,11 @@
     return bounds;
   };
 
+  /**
+   * Creates an HTML image element from a card object.
+   * @param {object} card
+   * @param {object} bounds
+   */
   const createCardElement = (card, bounds) => {
     let cardImg = document.createElement('img');
     cardImg.src = card.url;
@@ -115,6 +142,11 @@
     return cardImg;
   };
 
+  /**
+   * Adds a player card to it's hand.
+   * Draws the card to the screen and adds a score.
+   * @param {object} card
+   */
   const addPlayerCard = (card) => {
     userPickedCards.push(card);
 
@@ -138,6 +170,11 @@
     playerScoreElement.innerHTML = playerScore;
   };
 
+  /**
+   * Adds a computer card to it's hand.
+   * Draws the card to the screen and adds a score.
+   * @param {object} card
+   */
   const addComputerCard = (card) => {
     computerPickedCards.push(card);
 
@@ -160,6 +197,10 @@
     computerScoreElement.innerHTML = computerScore;
   };
 
+  /**
+   * Checks if the player or the computer has won.
+   * @param {boolean}  checkComputer, should we check the scores of the computer (the dealer) too?
+   */
   const checkScores = (checkComputer) => {
     if ((playerScore === 21 && computerScore !== 21) || computerScore > 21) {
       var titleElement = document.getElementById('game-title');
@@ -176,8 +217,11 @@
     /*else i*/
   };
 
+  buildCardDeck();
+  startNewGame();
+
   document.getElementById('stop-button').addEventListener('click', () => {
-    if (!isGameOver) {
+    if (!isGameOver && userPickedCards.length > 0) {
       var drawCardInterval = null;
       drawCardInterval = setInterval(() => {
         let computerCard = drawACard();
@@ -201,7 +245,7 @@
     }
   });
 
-  document.getElementById('restart-button').addEventListener('click', () => {
-    startNewGame();
-  });
+  document
+    .getElementById('restart-button')
+    .addEventListener('click', startNewGame);
 })();
