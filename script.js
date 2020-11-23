@@ -1,3 +1,5 @@
+'use strict';
+
 (() => {
   let cardDeck = [];
   let userPickedCards = []; //A list with all cards a user picked.
@@ -78,7 +80,6 @@
   const drawACard = () => {
     let randIndex = getRandomNr(0, cardsPool.length);
     let randomCard = cardsPool[randIndex];
-    console.log(`${randomCard.name} of ${randomCard.suit}`);
 
     //removes elements from startindex, nr of elements to remove.
     cardsPool.splice(randIndex, 1);
@@ -110,7 +111,7 @@
     cardImg.style.position = 'absolute';
     cardImg.style.left = `${bounds.left}px`;
     cardImg.style.top = `${bounds.top}px`;
-
+    cardImg.classList.add('card-image');
     return cardImg;
   };
 
