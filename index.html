@@ -14,53 +14,56 @@
 </head>
 
 <body>
-    <div class="score-container">
-        <div class="score-container-inner">
-            <div class="player-score-container">
-                <p class="player-score" id="player-score">0</p>
-                <p>Player</p>
-            </div>
-            <div class="vs-score-container">
-                <p>VS</p>
-            </div>
-            <div class="computer-score-container">
-                <p class="computer-score" id="computer-score">0</p>
-                <p>Computer</p>
-            </div>
-        </div>
-    </div>
-    <div class="game-border">
-        <div class="d-flex flex-column align-items-center">
-            <div class="game-container">
-                <h2 id="game-title">Draw a card</h2>
-                <div class="game-container-cards">
-                    <div id="player-cards">
-                        <div class="card-body">
-                            <img class="card-image" id="player-drawn-card-image" src="./Assets/Cards/cardBack_red4.png"
-                                alt="card back" style="visibility: hidden">
-                        </div>
-                    </div>
-                    <div class="deck" id="deck-cards">
-                        <div class="card-body">
-                            <img class="card-image" src="./Assets/Cards/cardBack_red4.png" alt="card back">
-                        </div>
-                    </div>
-                    <div id="computer-cards">
-                        <div class="card-body">
-                            <img class="card-image" id="computer-drawn-card-image"
-                                src="./Assets/Cards/cardBack_red4.png" alt="card back" style="visibility: hidden">
-                        </div>
-                    </div>
+    <div class="dynamic-wallpaper">
+        <div class="score-container">
+            <div class="score-container-inner">
+                <div class="player-score-container">
+                    <p class="player-score" id="player-score">0</p>
+                    <p>Player</p>
                 </div>
-                <button type="button" class="btn btn-outline-light" id="stop-button">
-                    Stop drawing
-                </button>
-                <button type="button" class="btn btn-outline-light" id="restart-button">
-                    Restart game
-                </button>
+                <div class="vs-score-container">
+                    <p>VS</p>
+                </div>
+                <div class="computer-score-container">
+                    <p class="computer-score" id="computer-score">0</p>
+                    <p>Computer</p>
+                </div>
+            </div>
+        </div>
+        <div class="game-border">
+            <div class="d-flex flex-column align-items-center">
+                <div class="game-container">
+                    <h2 id="game-title">Draw a card</h2>
+                    <div class="game-container-cards">
+                        <div id="player-cards">
+                            <div class="card-body">
+                                <img class="card-image" id="player-drawn-card-image"
+                                    src="./Assets/Cards/cardBack_red4.png" alt="card back" style="visibility: hidden">
+                            </div>
+                        </div>
+                        <div class="deck" id="deck-cards">
+                            <div class="card-body">
+                                <img class="card-image" src="./Assets/Cards/cardBack_red4.png" alt="card back">
+                            </div>
+                        </div>
+                        <div id="computer-cards">
+                            <div class="card-body">
+                                <img class="card-image" id="computer-drawn-card-image"
+                                    src="./Assets/Cards/cardBack_red4.png" alt="card back" style="visibility: hidden">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-outline-light" id="stop-button">
+                        Stop drawing
+                    </button>
+                    <button type="button" class="btn btn-outline-light" id="restart-button">
+                        Restart game
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
     <!-- Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a
         href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a> -->
 
