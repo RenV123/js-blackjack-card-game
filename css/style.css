@@ -94,7 +94,11 @@ h2 {
   /* Fixes issue with background not being fully displayed when a vertical scrollbar appears.
   See: https://css-tricks.com/css-fix-for-100vh-in-mobile-webkit/*/
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  /* min-height: -webkit-fill-available; */
   background-image: url('../Assets/background-green.jpg');
   box-shadow: inset 0 0 100vw black;
+}
+
+html {
+  height: -webkit-fill-available;
 }
