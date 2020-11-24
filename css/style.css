@@ -32,6 +32,7 @@ h2 {
 .card-body {
   width: 150px;
   height: 230px;
+  position: relative;
 }
 
 .deck .card-body .card-image:hover {

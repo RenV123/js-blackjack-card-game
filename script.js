@@ -112,9 +112,10 @@
   const calculateCardPosition = (cardContainer, offset) => {
     var bounds = {};
 
+    const containerOffset = 20;
     if (cardContainer) {
       bounds = {
-        top: cardContainer.offsetTop + cardContainer.children.length * offset,
+        top: containerOffset + cardContainer.children.length * offset,
         zIndex: cardContainer.children.length,
       };
     }
