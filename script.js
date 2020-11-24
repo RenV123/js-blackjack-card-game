@@ -113,12 +113,10 @@
     var bounds = {};
 
     if (cardContainer) {
-      bounds = { ...cardContainer.getBoundingClientRect() };
-      /* Calculate card position*/
-      if (cardContainer.lastChild) {
-        bounds.top =
-          cardContainer.lastChild.getBoundingClientRect().top + offset;
-      }
+      bounds = {
+        top: cardContainer.offsetTop + cardContainer.children.length * offset,
+        zIndex: cardContainer.children.length,
+      };
     }
 
     return bounds;
@@ -136,8 +134,9 @@
     //Make it accessible always update the alt tag
     cardImg.alt = `${card.name} of ${card.suit}`;
     cardImg.style.position = 'absolute';
-    cardImg.style.left = `${bounds.left}px`;
     cardImg.style.top = `${bounds.top}px`;
+    cardImg.zIndex = bounds.zIndex;
+    console.log(`card top ${cardImg.style.top}`);
     cardImg.classList.add('card-image');
     return cardImg;
   };
