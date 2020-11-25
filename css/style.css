@@ -27,6 +27,8 @@ h2 {
 .card-image {
   box-shadow: 2px 2px 10px 1px var(--game-card-shadow-color);
   border-radius: 5px;
+  left: 0px;
+  transition: left 0.25s ease-in, top 0.25s ease-in;
 }
 
 .card-body {

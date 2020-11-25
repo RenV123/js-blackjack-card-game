@@ -9,6 +9,17 @@
   let computerScore = 0;
   let isGameOver = false;
   const cardStackingOffset = 37; //Offset of the cards in pixels
+  const targetNumber = 21;
+  let playerCardsContainer = document.getElementById('player-cards-container');
+  let computerCardsContainer = document.getElementById(
+    'computer-cards-container'
+  );
+  let deckCardsElement = document.getElementById('deck-cards');
+
+  let sounds = {
+    placeCard: './Assets/Audio/cardPlace1.ogg',
+    slideCard: './Assets/Audio/cardSlide3.ogg',
+  };
 
   /**
    * Builds an array of card objects with a suit, name, url and score parameter.
@@ -47,33 +58,29 @@
     cardsPool = [...cardDeck];
     computerScore = 0;
     playerScore = 0;
-    isGameOver = false;
     computerPickedCards = [];
     userPickedCards = [];
     redrawGame();
+    isGameOver = false;
   };
 
   /**
    * Redraw/reset the important HTML elements of the game.
    */
   const redrawGame = () => {
-    let playerCardsContainer = document.getElementById(
-      'player-cards-container'
-    );
-    let computerCardsContainer = document.getElementById(
-      'computer-cards-container'
-    );
     let titleElement = document.getElementById('game-title');
     let computerScoreElement = document.getElementById('computer-score');
     let playerScoreElement = document.getElementById('player-score');
 
-    while (playerCardsContainer.firstChild) {
+    moveCardsToDeck(playerCardsContainer);
+    moveCardsToDeck(computerCardsContainer);
+    /*while (playerCardsContainer.firstChild) {
       playerCardsContainer.removeChild(playerCardsContainer.lastChild);
-    }
+    }*/
 
-    while (computerCardsContainer.firstChild) {
+    /*while (computerCardsContainer.firstChild) {
       computerCardsContainer.removeChild(computerCardsContainer.lastChild);
-    }
+    }*/
 
     titleElement.innerHTML = 'Draw a card.';
     computerScoreElement.innerHTML = computerScore;
@@ -136,8 +143,7 @@
     cardImg.alt = `${card.name} of ${card.suit}`;
     cardImg.style.position = 'absolute';
     cardImg.style.top = `${bounds.top}px`;
-    cardImg.zIndex = bounds.zIndex;
-    console.log(`card top ${cardImg.style.top}`);
+    cardImg.style.zIndex = bounds.zIndex;
     cardImg.classList.add('card-image');
     return cardImg;
   };
@@ -150,9 +156,6 @@
   const addPlayerCard = (card) => {
     userPickedCards.push(card);
 
-    let playerCardsContainer = document.getElementById(
-      'player-cards-container'
-    );
     let bounds = calculateCardPosition(
       playerCardsContainer,
       cardStackingOffset
@@ -161,8 +164,7 @@
     let playerCardImg = createCardElement(card, bounds);
     playerCardsContainer.appendChild(playerCardImg);
 
-    let cardPlaceSound = new Audio('./Assets/Audio/cardPlace1.ogg');
-    cardPlaceSound.play();
+    playSound('placeCard');
 
     playerScore += card.score;
 
@@ -178,9 +180,6 @@
   const addComputerCard = (card) => {
     computerPickedCards.push(card);
 
-    let computerCardsContainer = document.getElementById(
-      'computer-cards-container'
-    );
     let bounds = calculateCardPosition(
       computerCardsContainer,
       cardStackingOffset
@@ -188,8 +187,7 @@
     let computerCardImg = createCardElement(card, bounds);
     computerCardsContainer.appendChild(computerCardImg);
 
-    let cardPlaceSound = new Audio('./Assets/Audio/cardPlace1.ogg');
-    cardPlaceSound.play();
+    playSound('placeCard');
 
     computerScore += card.score;
 
@@ -198,24 +196,66 @@
   };
 
   /**
+   * plays a sound.
+   * @param {String} soundId Name of the sound you want to play (see sounds object)
+   */
+  const playSound = (soundId) => {
+    let audio = new Audio(sounds[soundId]);
+    audio.play();
+  };
+
+  /**
    * Checks if the player or the computer has won.
    * @param {boolean}  checkComputer, should we check the scores of the computer (the dealer) too?
    */
   const checkScores = (checkComputer) => {
-    if ((playerScore === 21 && computerScore !== 21) || computerScore > 21) {
+    if (
+      (playerScore === targetNumber && computerScore !== targetNumber) ||
+      computerScore > targetNumber
+    ) {
       var titleElement = document.getElementById('game-title');
       titleElement.innerHTML = 'The player has won!';
       isGameOver = true;
     } else if (
-      playerScore > 21 ||
-      (checkComputer && computerScore >= playerScore && computerScore <= 21)
+      playerScore > targetNumber ||
+      (checkComputer &&
+        computerScore >= playerScore &&
+        computerScore <= targetNumber)
     ) {
       var titleElement = document.getElementById('game-title');
       titleElement.innerHTML = 'The dealer has won.';
       isGameOver = true;
     }
-    /*else i*/
   };
+
+  const moveCardsToDeck = (container) => {
+    let length = container.children.length;
+
+    let targetElement = document.querySelector(
+      '#deck-cards > .card-body > .card-image'
+    );
+    for (let i = length - 1; i >= 0; i--) {
+      setTimeout(() => {
+        let offsetTop =
+          targetElement.getBoundingClientRect().top -
+          container.getBoundingClientRect().top;
+        let offsetLeft =
+          targetElement.getBoundingClientRect().left -
+          container.children[i].getBoundingClientRect().left;
+        container.children[i].style.top = `${offsetTop}px`;
+        container.children[i].style.left = `${offsetLeft}px`;
+        container.children[i].style.zIndex = length - i + 1;
+        playSound('slideCard');
+      }, 250 * (length - i + 1));
+    }
+  };
+
+  function offset(el) {
+    var rect = el.getBoundingClientRect(),
+      scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+      scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+  }
 
   buildCardDeck();
   startNewGame();
@@ -234,7 +274,7 @@
     }
   });
 
-  document.getElementById('deck-cards').addEventListener('click', () => {
+  deckCardsElement.addEventListener('click', () => {
     if (!isGameOver) {
       //draw a card
       if (cardsPool.length >= 2) {
