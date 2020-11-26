@@ -58,13 +58,7 @@
    * Resets all the scoring variables.
    */
   const startNewGame = () => {
-    cardsPool = [...cardDeck];
-    computerScore = 0;
-    playerScore = 0;
-    computerPickedCards = [];
-    userPickedCards = [];
-    redrawGame();
-    isGameOver = false;
+    redrawGame(); //TODO: refactor this
   };
 
   /**
@@ -75,12 +69,24 @@
     let computerScoreElement = document.getElementById('computer-score');
     let playerScoreElement = document.getElementById('player-score');
 
-    moveCardsToDeck(playerCardsContainer);
-    moveCardsToDeck(computerCardsContainer);
+    let promises = [
+      moveCardsToDeck(playerCardsContainer),
+      moveCardsToDeck(computerCardsContainer),
+    ];
 
-    titleElement.innerHTML = 'Draw a card.';
-    computerScoreElement.innerHTML = computerScore;
-    playerScoreElement.innerHTML = playerScore;
+    Promise.allSettled(promises).then(() => {
+      //For now reset values here;
+      cardsPool = [...cardDeck];
+      computerScore = 0;
+      playerScore = 0;
+      computerPickedCards = [];
+      userPickedCards = [];
+      isGameOver = false;
+
+      titleElement.innerHTML = 'Draw a card.';
+      computerScoreElement.innerHTML = computerScore;
+      playerScoreElement.innerHTML = playerScore;
+    });
   };
 
   /**
@@ -227,6 +233,7 @@
   /**
    * Moves all the cards to the deck and removes them from the game
    * @param {HTMLElement} container
+   * @return {Promise} a promise that cleans up the cards.
    */
   const moveCardsToDeck = (container) => {
     let length = container.children.length;
@@ -262,6 +269,7 @@
         }
       });
     });
+    return lastPromise;
   };
 
   function offset(el) {
