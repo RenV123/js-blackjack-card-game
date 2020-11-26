@@ -21,6 +21,9 @@
     slideCard: './Assets/Audio/cardSlide3.ogg',
   };
 
+  const setTimeoutPromise = (ms) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
   /**
    * Builds an array of card objects with a suit, name, url and score parameter.
    */
@@ -74,13 +77,6 @@
 
     moveCardsToDeck(playerCardsContainer);
     moveCardsToDeck(computerCardsContainer);
-    /*while (playerCardsContainer.firstChild) {
-      playerCardsContainer.removeChild(playerCardsContainer.lastChild);
-    }*/
-
-    /*while (computerCardsContainer.firstChild) {
-      computerCardsContainer.removeChild(computerCardsContainer.lastChild);
-    }*/
 
     titleElement.innerHTML = 'Draw a card.';
     computerScoreElement.innerHTML = computerScore;
@@ -228,14 +224,21 @@
     }
   };
 
+  /**
+   * Moves all the cards to the deck and removes them from the game
+   * @param {HTMLElement} container
+   */
   const moveCardsToDeck = (container) => {
     let length = container.children.length;
 
     let targetElement = document.querySelector(
       '#deck-cards > .card-body > .card-image'
     );
+
+    let promises = [];
     for (let i = length - 1; i >= 0; i--) {
-      setTimeout(() => {
+      let promise = setTimeoutPromise(250 * (length - i + 1));
+      promise.then(() => {
         let offsetTop =
           targetElement.getBoundingClientRect().top -
           container.getBoundingClientRect().top;
@@ -246,8 +249,19 @@
         container.children[i].style.left = `${offsetLeft}px`;
         container.children[i].style.zIndex = length - i + 1;
         playSound('slideCard');
-      }, 250 * (length - i + 1));
+      });
+      promises.push(promise);
     }
+
+    let lastPromise = setTimeoutPromise(500 * length);
+    lastPromise.then(() => {
+      //When all cards have been moved delete them.
+      Promise.allSettled(promises).then(() => {
+        while (container.firstChild) {
+          container.removeChild(container.lastChild);
+        }
+      });
+    });
   };
 
   function offset(el) {
