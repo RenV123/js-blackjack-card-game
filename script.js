@@ -1,20 +1,28 @@
 'use strict';
 
 (() => {
+  const cardStackingOffset = 37; //Offset of the cards in pixels
+  const targetNumber = 21;
+  const defaultPlayerMoney = 200;
+
+  //TODO: Fix this really ugly
+  // The offset from the card in relation to it's container (like padding)
+  const containerOffset = 20;
+
+  let playerScore = 0;
+  let computerScore = 0;
   let cardDeck = [];
   let userPickedCards = []; //A list with all cards a user picked.
   let computerPickedCards = [];
   let cardsPool = []; //Our pool with all the cards
-  let playerScore = 0;
-  let computerScore = 0;
   let isGameOver = false;
-  const cardStackingOffset = 37; //Offset of the cards in pixels
-  const targetNumber = 21;
+  let playerMoney = defaultPlayerMoney;
   let playerCardsContainer = document.getElementById('player-cards-container');
   let computerCardsContainer = document.getElementById(
     'computer-cards-container'
   );
   let deckCardsElement = document.getElementById('deck-cards');
+  let playerMoneyElement = document.getElementById('player-money');
 
   let sounds = {
     placeCard: './Assets/Audio/cardPlace1.ogg',
@@ -86,6 +94,7 @@
       titleElement.innerHTML = 'Draw a card.';
       computerScoreElement.innerHTML = computerScore;
       playerScoreElement.innerHTML = playerScore;
+      playerMoneyElement.innerHTML = playerMoney;
     });
   };
 
@@ -121,10 +130,10 @@
   const calculateCardPosition = (cardContainer, offset) => {
     var bounds = {};
 
-    const containerOffset = 20;
     if (cardContainer) {
       bounds = {
         top: containerOffset + cardContainer.children.length * offset,
+        left: containerOffset,
         zIndex: cardContainer.children.length,
       };
     }
@@ -145,6 +154,7 @@
     cardImg.alt = `${card.name} of ${card.suit}`;
     cardImg.style.position = 'absolute';
     cardImg.style.top = `${bounds.top}px`;
+    cardImg.style.left = `${bounds.left}px`;
     cardImg.style.zIndex = bounds.zIndex;
     cardImg.classList.add('card-image');
     return cardImg;
@@ -251,7 +261,8 @@
           container.getBoundingClientRect().top;
         let offsetLeft =
           targetElement.getBoundingClientRect().left -
-          container.children[i].getBoundingClientRect().left;
+          container.children[i].getBoundingClientRect().left +
+          containerOffset;
         container.children[i].style.top = `${offsetTop}px`;
         container.children[i].style.left = `${offsetLeft}px`;
         container.children[i].style.zIndex = length - i + 1;
@@ -271,13 +282,6 @@
     });
     return lastPromise;
   };
-
-  function offset(el) {
-    var rect = el.getBoundingClientRect(),
-      scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-      scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
-  }
 
   buildCardDeck();
   startNewGame();
